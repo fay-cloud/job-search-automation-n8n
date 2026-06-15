@@ -1,0 +1,24 @@
+# Environment and secrets
+.env
+.env.local
+*.env
+
+# n8n local data
+.n8n/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Node (if you add any scripts later)
+node_modules/
