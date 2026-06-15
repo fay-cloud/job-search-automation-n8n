@@ -4,6 +4,12 @@ An automated job search pipeline built with n8n that scrapes Data Engineer listi
 
 ---
 
+![Workflow Architecture](docs/image.png)
+
+An automated job search pipeline built with n8n that scrapes Data Engineer listings from Indeed Netherlands, scores each role against a candidate profile using an LLM, generates tailored cover letters, and stores everything in a Google Sheets tracker.
+
+---
+
 ## How it works
 
 The workflow runs every day at 10:00 AM and executes the following steps in sequence:
