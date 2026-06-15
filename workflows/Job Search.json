@@ -1,0 +1,427 @@
+{
+  "name": "Job Search",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        0
+      ],
+      "id": "7e677f0f-148a-43fb-9e2f-5d6e4dc94fd3",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "actorId": {
+          "__rl": true,
+          "value": "MXLpngmVpE8WTESQr",
+          "mode": "list",
+          "cachedResultName": "🚀 Indeed jobs scraper [PPR] (borderline/indeed-scraper)",
+          "cachedResultUrl": "https://console.apify.com/actors/MXLpngmVpE8WTESQr/input"
+        },
+        "customBody": "{\n    \"country\": \"nl\",\n    \"enableUniqueJobs\": false,\n    \"includeSimilarJobs\": false,\n    \"maxRows\": 1,\n    \"query\": \"Data Engineer\"\n}",
+        "timeout": {},
+        "authentication": "apifyOAuth2Api"
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        0
+      ],
+      "id": "e0275eff-7866-4d12-835a-775815fffb71",
+      "name": "Run an Actor",
+      "credentials": {
+        "apifyOAuth2Api": {
+          "id": "MqOjECZ8XxgQ7fXP",
+          "name": "Apify OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "Datasets",
+        "datasetId": "={{ $json.defaultDatasetId }}",
+        "offset": {},
+        "options": {},
+        "authentication": "apifyOAuth2Api"
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        64,
+        0
+      ],
+      "id": "796ae7f6-4ea8-43f5-ab94-fff587cd7ddc",
+      "name": "Get dataset items",
+      "credentials": {
+        "apifyOAuth2Api": {
+          "id": "MqOjECZ8XxgQ7fXP",
+          "name": "Apify OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        272,
+        0
+      ],
+      "id": "c493ab6d-677f-4440-b1ec-64e4f000dc2f",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-5-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "=You are a senior HR manager with extensive experience recruiting across multiple industries. You have deep knowledge of ATS systems, hiring workflows, and recruiter screening behaviour. You can quickly detect generic or AI-written cover letters and avoid them entirely. Your writing sounds human, specific, and credible.\n\nYour task is to generate a highly compelling, role-specific cover letter using the candidate’s resume and the job description provided.\n\nGuidelines for writing the cover letter:\n\nWrite as a real professional, not as an assistant or tool.\nDo not use generic phrases, buzzwords, or templated openings.\nAvoid exaggerated claims and obvious AI patterns.\nFocus on alignment, relevance, and evidence, not fluff.\n\nContent requirements:\n\nDemonstrate a clear understanding of the role and the employer’s needs.\nExplicitly connect the candidate’s experience, skills, and achievements to the job requirements.\nHighlight impact, outcomes, and problem solving rather than listing responsibilities.\nUse concise, confident language that a recruiter can scan quickly.\nMaintain a natural, professional tone that sounds authentic and intentional.\n\nATS awareness:\n\nUse role-relevant keywords naturally without keyword stuffing.\nEnsure clear structure and standard formatting suitable for ATS parsing.\nAvoid emojis, symbols, or unconventional formatting.\n\nStyle expectations:\n\nDirect and human.\nProfessional and persuasive.\nNo clichés, no filler, no overexplaining.\nBritish English.\n\nOutput:\n\nReturn only the final cover letter text.\nDo not include explanations, notes, or meta commentary."
+            },
+            {
+              "content": "=Here is the job listing details:\n\nTitle:{{ $('Limit').item.json.title }}\n\nDescription: {{ $('Limit').item.json.descriptionHtml }}\n\nCompany name: {{ $('Limit').item.json.companyName }}\n\nLocation: {{ $('Limit').item.json.location }}\n\nHere is the candidate's skill set:\n\nCANDIDATE PROFILE\n\nFayomi Kehinde Adeseun\n\nLocation: Netherlands\n\nLinkedIn: [placeholder]\n\nGitHub: https://github.com/fay-cloud/ndov-transit-pipeline\n\nEducation\n\nMaster's Degree in Data Science\nGuglielmo Marconi University, Italy\n\nDiploma in Data Analytics\nAthena Global Education\n\nBachelor of Technology in Animal Production and Health\nLadoke Akintola University of Technology, Nigeria\n\nProfessional Summary\n\nData Engineer with 5+ years of experience across data engineering, data analytics, and business intelligence. Experienced in designing and building scalable data platforms, ELT pipelines, cloud-based data solutions, and analytics systems. Strong background in Python, SQL, Azure, Snowflake, Airflow, dbt, Power BI, and modern data warehouse architectures.\n\nRelevant Expertise and Focus Areas\n\nData Engineering and ELT Pipeline Development\n\nCloud Data Platforms and Modern Data Warehouses\n\nAzure Data Services and Snowflake\n\nWorkflow Orchestration using Apache Airflow\n\nData Transformation using dbt\n\nData Modeling and Data Architecture\n\nPython and SQL Development\n\nBusiness Intelligence and Data Analytics\n\nData Quality, Testing, and Monitoring\n\nCI/CD and DevOps for Data Platforms\n\nDocker and Containerized Data Solutions\n\nExperience\n\nData Engineer and Data Analytics Professional\n\nDesigned and implemented scalable data pipelines to ingest, transform, and serve large datasets for analytics and reporting.\n\nBuilt end-to-end ELT workflows using Python, SQL, Airflow, dbt, Azure, and Snowflake.\n\nDeveloped dimensional data models, staging layers, and data marts to support business reporting and analytical workloads.\n\nCreated automated data quality frameworks, monitoring processes, and validation checks to improve data reliability.\n\nDeveloped dashboards and reporting solutions using Power BI and other analytical tools.\n\nImplemented CI/CD practices and containerized solutions using GitHub Actions and Docker.\n\nWorked with structured and semi-structured data from multiple sources to support business intelligence and decision-making.\n\nHands-On Projects\n\nNDOV Dutch Public Transport Data Platform\n\nBuilt an end-to-end data engineering solution incorporating:\n\nPython-based data ingestion\n\nAzure Data Lake Storage Gen2\n\nSnowflake Data Warehouse\n\nApache Airflow orchestration\n\ndbt transformations\n\nPower BI dashboards\n\nDocker containerization\n\nGitHub Actions CI/CD automation\n\nOverall Fit for the Role\n\nFayomi's profile aligns strongly with Data Engineer, Analytics Engineer, Cloud Data Engineer, BI Engineer, and Data Platform Engineer positions. His experience in building modern data platforms, designing scalable pipelines, implementing cloud-based architectures, and delivering business-focused analytics solutions makes him a strong candidate for organizations seeking data engineering expertise.\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        832,
+        0
+      ],
+      "id": "f7e57032-69b8-49a3-8cfd-479a5b09bcf0",
+      "name": "Cover_letter_writer",
+      "credentials": {
+        "openAiApi": {
+          "id": "FWejiZojv2CR60qQ",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-5-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "=You are an intelligent evaluation agent. Your task is to assess how closely a job listing matches a candidate’s skill set and return a score out of 10.\n\nScoring rules:\n\nResume fit\nAward 4 points if the candidate is an excellent or near perfect fit for the role.\nAward 2 points if the candidate mostly matches the role requirements.\nAward 0 points if the fit is weak or unclear.\n\nVisa sponsor\nAward 3 points if the role gives visa sponsorship.\nAward 0 points if visa sponsorship is not provided or not specified.\n\nHybrid or on-site status\nAward 1 point if the role is onsite or hybrid and equals true.\nAward 0 points if remote.\n\nBenefits\nAward 1 point if the company offers any benefits.\nAward 0 points if no benefits are listed.\n\nEmployment type\nAward 1 point if the role is full time.\nAward 0 points if the role is contract or part time.\n\nLanguage requirement filter\nIf the job explicitly requires Dutch language proficiency, automatically return a score of 0 regardless of other criteria.\n\nScoring logic\nAdd all awarded points to produce a final score between 0 and 10.\n\nExamples\nIf the job mostly fits the candidate, offers visa sponsorship, is remote, but offers no benefits and is not full time, the total score is 5.\nIf the job fits perfectly, does not offer visa sponsorship, is onsite, offers some benefits, and is full time, the total score is 6.\nIf the job requires Dutch language, the total score is 0.\n\nOutput format\nReturn only valid JSON in the following structure:\n\n{\n\"score\": 0,\n\"reasoning\": \"Brief explanation showing how each criterion contributed to the total score.\"\n}\n\nDo not include any text outside the JSON response."
+            },
+            {
+              "content": "=Here is the job listing details:\n\nTitle: {{ $json.title }}\n\nDescription: {{ $json.descriptionText }}\n\nCompany name: {{ $json.companyName }}\n\nLocation: {{ $('Get dataset items').item.json.location }}\n\nHere is the candidate's skill set:\n\nCANDIDATE PROFILE\n\nFayomi Kehinde Adeseun\n\nLocation: Netherlands\n\nLinkedIn: [placeholder]\n\nGitHub: [placeholder]\n\nEducation\n\nMaster's Degree in Data Science\nGuglielmo Marconi University, Italy\n\nDiploma in Data Analytics\nAthena Global Education\n\nBachelor of Technology in Animal Production and Health\nLadoke Akintola University of Technology, Nigeria\n\nProfessional Summary\n\nData Engineer with 5+ years of experience across data engineering, data analytics, and business intelligence. Experienced in designing and building scalable data platforms, ELT pipelines, cloud-based data solutions, and analytics systems. Strong background in Python, SQL, Azure, Snowflake, Airflow, dbt, Power BI, and modern data warehouse architectures.\n\nRelevant Expertise and Focus Areas\n\nData Engineering and ELT Pipeline Development\n\nCloud Data Platforms and Modern Data Warehouses\n\nAzure Data Services and Snowflake\n\nWorkflow Orchestration using Apache Airflow\n\nData Transformation using dbt\n\nData Modeling and Data Architecture\n\nPython and SQL Development\n\nBusiness Intelligence and Data Analytics\n\nData Quality, Testing, and Monitoring\n\nCI/CD and DevOps for Data Platforms\n\nDocker and Containerized Data Solutions\n\nExperience\n\nData Engineer and Data Analytics Professional\n\nDesigned and implemented scalable data pipelines to ingest, transform, and serve large datasets for analytics and reporting.\n\nBuilt end-to-end ELT workflows using Python, SQL, Airflow, dbt, Azure, and Snowflake.\n\nDeveloped dimensional data models, staging layers, and data marts to support business reporting and analytical workloads.\n\nCreated automated data quality frameworks, monitoring processes, and validation checks to improve data reliability.\n\nDeveloped dashboards and reporting solutions using Power BI and other analytical tools.\n\nImplemented CI/CD practices and containerized solutions using GitHub Actions and Docker.\n\nWorked with structured and semi-structured data from multiple sources to support business intelligence and decision-making.\n\nHands-On Projects\n\nNDOV Dutch Public Transport Data Platform\n\nBuilt an end-to-end data engineering solution incorporating:\n\nPython-based data ingestion\n\nAzure Data Lake Storage Gen2\n\nSnowflake Data Warehouse\n\nApache Airflow orchestration\n\ndbt transformations\n\nPower BI dashboards\n\nDocker containerization\n\nGitHub Actions CI/CD automation\n\nOverall Fit for the Role\n\nFayomi's profile aligns strongly with Data Engineer, Analytics Engineer, Cloud Data Engineer, BI Engineer, and Data Platform Engineer positions. His experience in building modern data platforms, designing scalable pipelines, implementing cloud-based architectures, and delivering business-focused analytics solutions makes him a strong candidate for organizations seeking data engineering expertise.\n"
+            },
+            {}
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "json_object"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        0
+      ],
+      "id": "c63e0855-55c5-40b5-851f-62dd86d3b394",
+      "name": "Resume Assesor",
+      "credentials": {
+        "openAiApi": {
+          "id": "FWejiZojv2CR60qQ",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1K_gwg8zW6GcOU94RwdpoNOFKlqj_YBcr7c45NHZQ24E",
+          "mode": "list",
+          "cachedResultName": "Job Tracking",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1K_gwg8zW6GcOU94RwdpoNOFKlqj_YBcr7c45NHZQ24E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1K_gwg8zW6GcOU94RwdpoNOFKlqj_YBcr7c45NHZQ24E/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Link": "={{ $('Limit').item.json.jobUrl }}",
+            "Hybrid/Onsite": "={{ $('Limit').item.json.isRemote }}",
+            "Expired": "={{ $('Limit').item.json.expired }}",
+            "City": "={{ $('Limit').item.json.location.city }}",
+            "Title": "={{ $('Limit').item.json.title }}",
+            "Job Description": "={{ $('Limit').item.json.descriptionText }}",
+            "Platform": "Indeed",
+            "Date": "={{ $('Limit').item.json.datePublished }}",
+            "Rating": "={{ $('Resume Assesor').item.json.output[0].content[0].text.score }}",
+            "Company Name": "={{ $('Limit').item.json.companyName }}",
+            "Cover Letter": "={{ $json.output[0].content[0].text }}",
+            "Salary": "={{ $('Limit').item.json.salary }}",
+            "Status": "ToDo"
+          },
+          "matchingColumns": [
+            "Link"
+          ],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Job Description",
+              "displayName": "Job Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Platform",
+              "displayName": "Platform",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Rating",
+              "displayName": "Rating",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cover Letter",
+              "displayName": "Cover Letter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Salary",
+              "displayName": "Salary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Expired",
+              "displayName": "Expired",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hybrid/Onsite",
+              "displayName": "Hybrid/Onsite",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1184,
+        0
+      ],
+      "id": "0de4a7ac-bb1d-4978-bc70-7ea1bfff4dba",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XpMOoFe2fvqI70nk",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Run an Actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run an Actor": {
+      "main": [
+        [
+          {
+            "node": "Get dataset items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get dataset items": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Resume Assesor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resume Assesor": {
+      "main": [
+        [
+          {
+            "node": "Cover_letter_writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cover_letter_writer": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "2435ed3f-3acc-4f63-9303-6cdfd48f3055",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cfd86e9ab82027a095bf9c55a47002529086f263c8453d33303504c432467d51"
+  },
+  "nodeGroups": [],
+  "id": "rwvJj8TPAOQJkxXP",
+  "tags": []
+}
